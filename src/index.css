@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+body {
+    overflow-x: hidden;
+  }
+  iframe {
+    max-width: 100%;
+    display: block;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+  
+  
