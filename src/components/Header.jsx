@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { auth } from "../utils/firebase";
 import { addUser, removeUser } from "../utils/userSlice";
 import { LOGO_URL } from "../utils/constant";
+import { toggleGptSearchView } from "../utils/gptSlice";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -44,6 +45,10 @@ const Header = () => {
     
   }, []);
 
+  const toggleSearchView = () => {
+    dispatch(toggleGptSearchView());
+  };
+
   return (
     <div className="absolute w-screen px-8 py-2 bg-gradient-to-b from-black z-10 flex items-center justify-between">
       <img
@@ -55,6 +60,7 @@ const Header = () => {
       />
       {user && (
         <div className="flex items-center justify-between">
+          <button onClick={toggleSearchView} className="text-white px-3 py-1 bg-red-500 rounded-sm"> GPT Search</button>
           <h4 className="px-2 text-white">
             {user?.displayName?.split(" ")[0]}
           </h4>
