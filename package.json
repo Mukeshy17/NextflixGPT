@@ -17,6 +17,7 @@
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.4.1",
+    "react-select": "^5.10.1",
     "tailwind-scrollbar-hide": "^2.0.0"
   },
   "devDependencies": {
