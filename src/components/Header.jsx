@@ -8,37 +8,35 @@ import { customStyles, langConst, LOGO_URL } from "../utils/constant";
 import { toggleGptSearchView } from "../utils/gptSlice";
 import Select from "react-select";
 import { changeLanguage } from "../utils/configSlice";
+import { Menu, X } from "lucide-react"; // Hamburger icons
 
 const Header = () => {
   const [selectedOption, setSelectedOption] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
   const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
+
   const handleSignOut = () => {
     const auth = getAuth();
-    signOut(auth)
-      .then(() => {})
-      .catch((error) => {});
+    signOut(auth).catch((error) => {});
   };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
         const { uid, email, displayName, photoURL } = user;
         dispatch(
           addUser({
-            uid: uid,
-            email: email,
-            displayName: displayName,
-            photoURL: photoURL,
+            uid,
+            email,
+            displayName,
+            photoURL,
           })
         );
         navigate("/browse");
       } else {
-        // User is signed out
         dispatch(removeUser());
         navigate("/");
       }
@@ -54,53 +52,109 @@ const Header = () => {
   const handleLanguageChange = (option) => {
     dispatch(changeLanguage(option.value));
     setSelectedOption(option);
-    console.log(option.value);
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <div className="absolute w-screen px-8 py-2 bg-gradient-to-b from-black z-10 flex items-center justify-between">
-      <img className="w-44" src={LOGO_URL} alt="logo" />
+    <div className="absolute w-screen px-4 py-2 bg-gradient-to-b from-black z-10 flex flex-col md:flex-row items-center justify-between">
+      {/* Top Row: Logo + Hamburger */}
+      <div className="w-full flex items-center justify-between">
+        <img className="w-36 sm:w-44" src={LOGO_URL} alt="logo" />
+
+        {/* Hamburger Button */}
+        {user && (
+          <button className="md:hidden text-white" onClick={toggleMenu}>
+            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        )}
+      </div>
+
+      {/* Mobile Menu */}
+      {user && isMenuOpen && (
+        <div className="md:hidden mt-4 w-full bg-black flex flex-col items-start gap-4 text-sm">
+          {showGptSearch && (
+            <div className="w-full">
+              <Select
+                classNamePrefix="custom-select"
+                value={selectedOption}
+                onChange={handleLanguageChange}
+                options={langConst}
+                placeholder="Select"
+                styles={customStyles}
+                theme={(theme) => ({
+                  ...theme,
+                  borderRadius: 8,
+                  colors: {
+                    ...theme.colors,
+                    primary25: "#4b5563",
+                    primary: "#6b7280",
+                    neutral0: "#1f2937",
+                    neutral80: "white",
+                    neutral20: "#4b5563",
+                  },
+                })}
+              />
+            </div>
+          )}
+          <button
+            onClick={toggleSearchView}
+            className="text-white px-3 py-1 bg-red-500 rounded-sm w-full"
+          >
+            {showGptSearch ? "Home Page" : "GPT Search"}
+          </button>
+
+          <div className="flex items-center gap-3">
+            {/* <h4 className="text-white font-medium">{user?.displayName?.split(" ")[0]}</h4> */}
+            {/* <img className="h-9 w-9 rounded-sm" src={user?.photoURL} alt="Profile" /> */}
+          </div>
+
+          <button onClick={handleSignOut} className="font-bold text-xl mb-6 text-red-600">
+            (Sign Out)
+          </button>
+        </div>
+      )}
+
+      {/* Desktop Menu */}
       {user && (
-        <div className="flex items-center justify-between">
-          {showGptSearch && <div className="mx-2 w-28">
-            <Select
-              classNamePrefix="custom-select"
-              value={selectedOption}
-              onChange={handleLanguageChange}
-              options={langConst}
-              placeholder="Select"
-              styles={customStyles}
-              theme={(theme) => ({
-                ...theme,
-                borderRadius: 8,
-                colors: {
-                  ...theme.colors,
-                  primary25: "#4b5563", // hover color
-                  primary: "#6b7280", // selected color
-                  neutral0: "#1f2937", // background
-                  neutral80: "white", // text color
-                  neutral20: "#4b5563", // border color
-                },
-              })}
-            />
-          </div>}
+        <div className="hidden md:flex items-center gap-4">
+          {showGptSearch && (
+            <div className="w-32">
+              <Select
+                classNamePrefix="custom-select"
+                value={selectedOption}
+                onChange={handleLanguageChange}
+                options={langConst}
+                placeholder="Select"
+                styles={customStyles}
+                theme={(theme) => ({
+                  ...theme,
+                  borderRadius: 8,
+                  colors: {
+                    ...theme.colors,
+                    primary25: "#4b5563",
+                    primary: "#6b7280",
+                    neutral0: "#1f2937",
+                    neutral80: "white",
+                    neutral20: "#4b5563",
+                  },
+                })}
+              />
+            </div>
+          )}
 
           <button
             onClick={toggleSearchView}
-            className="text-white px-3 py-1 bg-red-500 rounded-sm"
+            className="text-white px-3 py-1 bg-red-500 rounded-sm w-38"
           >
-            {" "}
             {showGptSearch ? "Home Page" : "GPT Search"}
           </button>
-          <h4 className="px-2 text-white">
-            {user?.displayName?.split(" ")[0]}
-          </h4>
-          <img
-            className="h-10 w-10 mx-2 rounded-sm"
-            src={user?.photoURL}
-            alt="Profile-img"
-          />
-          <button onClick={handleSignOut} className="font-bold text-red-600">
+
+          {/* <h4 className="text-white font-medium">{user?.displayName?.split(" ")[0]}</h4> */}
+          <img className="h-9 w-9 rounded-sm" src={user?.photoURL} alt="Profile" />
+          <button onClick={handleSignOut} className="font-bold w-28 text-red-600">
             (Sign Out)
           </button>
         </div>

@@ -100,13 +100,13 @@ const Login = () => {
       <Header />
       <div className="absolute inset-0">
         <img
-        className="w-full h-full object-cover"
+        className="h-screen w-full md:h-full object-cover"
           src={LOGIN_BG_URL}
           alt="bg-image"
         />
       </div>
-      <form className="w-3/12 absolute p-12 bg-black/80 rounded-lg my-24 mx-auto right-0 left-0 text-white">
-        <h3 className="text-white text-4xl pb-8 font-bold">
+      <form className="w-5/6 md:w-3/12 absolute p-12 bg-black/80 rounded-lg my-24 mx-auto right-0 left-0 text-white">
+        <h3 className="text-white text-3xl md:text-4xl pb-8 font-bold">
           {isSignIn ? "Sign In" : "Sign Up"}
         </h3>
         {!isSignIn && (
@@ -143,7 +143,7 @@ const Login = () => {
 </button>
 
         <div className="flex items-center text-sm text-gray-400 mb-6">
-          <input className="h-4 w-4" type="checkBox" /> <span>Remeber Me</span>
+          <input className="h-4 w-4 mr-2" type="checkBox" /> <span>Remeber Me</span>
         </div>
         <div className="flex justify-between items-center text-sm text-gray-400">
           <span className="text-gray-400">
