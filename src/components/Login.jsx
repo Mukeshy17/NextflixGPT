@@ -98,7 +98,7 @@ const Login = () => {
   return (
     <div>
       <Header />
-      <div className="absolute inset-0">
+      <div className="fixed inset-0">
         <img
         className="h-screen w-full md:h-full object-cover"
           src={LOGIN_BG_URL}
